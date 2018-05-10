@@ -2,7 +2,7 @@
 
 set -e
 
-export DB_URL=postgres://postgres@localhost:5432/boardstestapi_tests
+export DB_URL=postgres://postgres@localhost:5432/blog_tests
 
 npm run build
 node_modules/.bin/knex migrate:latest

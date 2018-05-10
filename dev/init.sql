@@ -1,2 +1,2 @@
-CREATE DATABASE boardstestapi_tests;
-GRANT ALL PRIVILEGES ON DATABASE boardstestapi_tests TO postgres;
+CREATE DATABASE blog_tests;
+GRANT ALL PRIVILEGES ON DATABASE blog_tests TO postgres;

@@ -16,12 +16,10 @@
     "test": "run-s -c compile jest:unit tslint",
     "prebuild": "rm -rf ./build",
     "build": "tsc",
-    "preversion": "run-s test build",
-    "postversion": "git push && git push --tags",
-    "start": "./prod/start.sh",
+    "db:migrate": "knex migrate:latest",
+    "start": "node ./build/server.js",
     "ts-start": "ts-node ./lib/server.ts",
-    "live": "nodemon --config ./dev/nodemon.json",
-    "db:migrate": "knex migrate:latest"
+    "live": "nodemon --config ./dev/nodemon.json"
   },
   "author": "Michael Borde",
   "license": "MIT",
