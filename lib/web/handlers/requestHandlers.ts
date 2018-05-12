@@ -3,16 +3,16 @@ import { Handler } from 'express';
 
 import { articlesGet, articlesPost } from './articles';
 
-interface VerbHandlersDependencies {
+interface RequestHandlersDependencies {
   commandBus: MessageBus;
   queryBus: MessageBus;
 }
 
-export class VerbHandlers {
+export class RequestHandlers {
   public articlesGet: Handler;
   public articlesPost: Handler;
 
-  constructor(dependencies: VerbHandlersDependencies) {
+  constructor(dependencies: RequestHandlersDependencies) {
     const { commandBus, queryBus } = dependencies;
     this.articlesGet = articlesGet({ queryBus });
     this.articlesPost = articlesPost({ commandBus });

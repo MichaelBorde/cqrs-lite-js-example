@@ -6,7 +6,7 @@ import * as morgan from 'morgan';
 
 import { bootstrap, RuntimeDependencies } from '../bootstrap';
 import { Configuration } from '../configuration';
-import { VerbHandlers } from './handlers';
+import { RequestHandlers } from './handlers';
 import { createRouter } from './router';
 
 export class Server {
@@ -47,11 +47,11 @@ export class Server {
     dependencies: RuntimeDependencies
   ): void {
     const { commandBus, queryBus } = dependencies;
-    const verbHandlers = new VerbHandlers({
+    const requestHandlers = new RequestHandlers({
       commandBus,
       queryBus
     });
-    const router = createRouter({ verbHandlers });
+    const router = createRouter({ requestHandlers });
     expressApp.use(router);
   }
 

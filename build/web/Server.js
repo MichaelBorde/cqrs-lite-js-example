@@ -32,11 +32,11 @@ class Server {
     }
     configureRouter(expressApp, dependencies) {
         const { commandBus, queryBus } = dependencies;
-        const verbHandlers = new handlers_1.VerbHandlers({
+        const requestHandlers = new handlers_1.RequestHandlers({
             commandBus,
             queryBus
         });
-        const router = router_1.createRouter({ verbHandlers });
+        const router = router_1.createRouter({ requestHandlers });
         expressApp.use(router);
     }
     listen() {

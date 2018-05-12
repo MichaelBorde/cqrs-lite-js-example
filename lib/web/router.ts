@@ -1,16 +1,16 @@
 import { Router } from 'express';
 import PromiseRouter from 'express-promise-router';
 
-import { VerbHandlers } from './handlers';
+import { RequestHandlers } from './handlers';
 
 interface RouterDependencies {
-  verbHandlers: VerbHandlers;
+  requestHandlers: RequestHandlers;
 }
 
 export function createRouter(dependencies: RouterDependencies): Router {
-  const { verbHandlers } = dependencies;
+  const { requestHandlers } = dependencies;
   const routing = PromiseRouter();
-  routing.post('/articles', verbHandlers.articlesPost);
-  routing.get('/articles', verbHandlers.articlesGet);
+  routing.post('/articles', requestHandlers.articlesPost);
+  routing.get('/articles', requestHandlers.articlesGet);
   return routing;
 }

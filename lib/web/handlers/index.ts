@@ -1,1 +1,1 @@
-export * from './verbHandlers';
+export * from './requestHandlers';
