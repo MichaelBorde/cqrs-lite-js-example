@@ -29,10 +29,7 @@ export function articlesPost(dependencies: Dependencies): Handler {
       return response.status(400).send(validateBody.errors);
     }
     return commandBus
-      .post({
-        type: articleCommands.createArticle,
-        payload: request.body
-      })
+      .post(articleCommands.createArticle(request.body))
       .then(() => response.end());
   };
 }

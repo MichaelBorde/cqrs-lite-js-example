@@ -26,14 +26,11 @@ describe('Articles post', () => {
     await handler(request, response, null);
 
     const postStub = commandBus.post as SinonStub;
-    const expectedMessage = {
-      type: articleCommands.createArticle,
-      payload: {
-        id: examples.uuid,
-        title: 'I have a new cat',
-        text: 'Its name is Garfield'
-      }
-    };
+    const expectedMessage = articleCommands.createArticle({
+      id: examples.uuid,
+      title: 'I have a new cat',
+      text: 'Its name is Garfield'
+    });
     const actualMessage = postStub.lastCall.args[0];
     expect(actualMessage).toEqual(expectedMessage);
   });

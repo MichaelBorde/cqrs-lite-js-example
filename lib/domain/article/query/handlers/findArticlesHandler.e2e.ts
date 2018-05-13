@@ -1,5 +1,6 @@
 import { MessageHandler } from '@arpinum/messaging';
 import { examples, withTestDb } from '../../../../test';
+import { articleQueries } from './articleQueries';
 import { ArticleView, findArticlesHandler } from './findArticlesHandler';
 
 describe('Find articles handler', () => {
@@ -24,7 +25,7 @@ describe('Find articles handler', () => {
       { id: examples.uuid2, title: 'Game review', text: 'Doom is a great game' }
     ]);
 
-    const articles = await handler({ type: '' });
+    const articles = await handler(articleQueries.findArticles());
 
     expect(articles).toEqual([
       {

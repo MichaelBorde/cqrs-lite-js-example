@@ -23,7 +23,7 @@ describe('Articles get', () => {
     const request = createValidRequest();
     const response = createResponseStub();
     (queryBus.post as SinonStub)
-      .withArgs({ type: articleQueries.findArticles })
+      .withArgs(articleQueries.findArticles())
       .resolves([
         {
           id: examples.uuid,

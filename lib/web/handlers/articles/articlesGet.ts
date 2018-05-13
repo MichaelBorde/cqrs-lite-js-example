@@ -12,9 +12,7 @@ export function articlesGet(dependencies: Dependencies): Handler {
 
   return (_: Request, response: Response) => {
     return queryBus
-      .post({
-        type: articleQueries.findArticles
-      })
+      .post(articleQueries.findArticles())
       .then(articles => response.send(articles));
   };
 }

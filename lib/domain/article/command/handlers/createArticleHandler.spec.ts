@@ -3,14 +3,12 @@ import { SinonStub, stub } from 'sinon';
 
 import { examples } from '../../../../test';
 import { ArticleRepository } from '../articleRepository';
-import {
-  createArticleHandler,
-  CreateArticlePayload
-} from './createArticleHandler';
+import { articleCommands, ArticleCreation } from './articleCommands';
+import { createArticleHandler } from './createArticleHandler';
 
 describe('Create article hander', () => {
   let articleRepository: ArticleRepository;
-  let handler: MessageHandler<CreateArticlePayload, void>;
+  let handler: MessageHandler<ArticleCreation, void>;
 
   beforeEach(() => {
     articleRepository = {
@@ -20,13 +18,13 @@ describe('Create article hander', () => {
   });
 
   it('should create an article and save it', async () => {
-    const payload = {
+    const command = articleCommands.createArticle({
       id: examples.uuid,
       title: 'I have a new cat',
       text: 'Its name is Garfield'
-    };
+    });
 
-    await handler({ type: '', payload });
+    await handler(command);
 
     const saveStub = articleRepository.save as SinonStub;
     expect(saveStub.called).toBeTruthy();

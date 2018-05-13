@@ -9,6 +9,6 @@ interface Dependencies {
 export function articleQueryHandlers(dependencies: Dependencies) {
   const { dbClient } = dependencies;
   return {
-    [articleQueries.findArticles]: findArticlesHandler({ dbClient })
+    [articleQueries.findArticles.toString()]: findArticlesHandler({ dbClient })
   };
 }

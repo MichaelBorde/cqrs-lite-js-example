@@ -1,3 +1,5 @@
+import { messageCreator } from '@arpinum/messaging';
+
 export const articleQueries = {
-  findArticles: 'FIND_ARTICLES'
+  findArticles: messageCreator<void>('FIND_ARTICLES')
 };

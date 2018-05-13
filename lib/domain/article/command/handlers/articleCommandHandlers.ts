@@ -9,7 +9,7 @@ interface Dependencies {
 export function articleCommandHandlers(dependencies: Dependencies) {
   const { articleRepository } = dependencies;
   return {
-    [articleCommands.createArticle]: createArticleHandler({
+    [articleCommands.createArticle.toString()]: createArticleHandler({
       articleRepository
     })
   };
