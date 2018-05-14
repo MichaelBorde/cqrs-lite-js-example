@@ -17,7 +17,9 @@ export class DbArticleRepository implements ArticleRepository {
 
   public async save(article: Article): Promise<void> {
     const dbArticle = toDbArticle(article);
-    await this.dbClient.table('articles').insert(dbArticle);
+    await this.dbClient.transaction(trx =>
+      trx.table('articles').insert(dbArticle)
+    );
   }
 }
 
