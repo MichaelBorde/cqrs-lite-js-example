@@ -1,13 +1,8 @@
 import { MessageBus } from '@arpinum/messaging';
 import { Handler, Request } from 'express';
-import { SinonStub } from 'sinon';
 
 import { articleCommands } from '../../../domain';
-import {
-  createMessageBusStub,
-  createResponseStub,
-  examples
-} from '../../../test';
+import { examples, MessageBusStub, ResponseStub } from '../../../test';
 import { articlesPost } from './articlesPost';
 
 describe('Articles post', () => {
@@ -15,47 +10,42 @@ describe('Articles post', () => {
   let handler: Handler;
 
   beforeEach(() => {
-    commandBus = createMessageBusStub();
+    commandBus = new MessageBusStub();
     handler = articlesPost({ commandBus });
   });
 
   it('should parse body and post a create command', async () => {
     const request = createValidRequest();
-    const response = createResponseStub();
+    const response = new ResponseStub();
 
     await handler(request, response, null);
 
-    const postStub = commandBus.post as SinonStub;
     const expectedMessage = articleCommands.createArticle({
       id: examples.uuid,
       title: 'I have a new cat',
       text: 'Its name is Garfield'
     });
-    const actualMessage = postStub.lastCall.args[0];
-    expect(actualMessage).toEqual(expectedMessage);
+    expect(commandBus.post).toHaveBeenCalledWith(expectedMessage);
   });
 
   it('should end response', async () => {
     const request = createValidRequest();
-    const response = createResponseStub();
+    const response = new ResponseStub();
 
     await handler(request, response, null);
 
-    expect((response.end as SinonStub).called).toBeTruthy();
+    expect(response.end).toHaveBeenCalled();
   });
 
   it('should send 400 if body is invalid', async () => {
     const request = { body: {} } as Request;
-    const response = createResponseStub();
+    const response = new ResponseStub();
 
     await handler(request, response, null);
 
-    const statusStub = response.status as SinonStub;
-    expect(statusStub.called).toBeTruthy();
-    expect(statusStub.lastCall.args[0]).toEqual(400);
-    const sendStub = response.send as SinonStub;
-    expect(sendStub.called).toBeTruthy();
-    const errors = sendStub.lastCall.args[0] as any[];
+    expect(response.status).toHaveBeenCalledWith(400);
+    expect(response.send).toHaveBeenCalled();
+    const errors = (response.send as jest.Mock).mock.calls[0][0];
     expect(errors.length).toBeGreaterThan(0);
   });
 });

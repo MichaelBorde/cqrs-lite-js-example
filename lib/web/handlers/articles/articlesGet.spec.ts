@@ -1,13 +1,8 @@
 import { MessageBus } from '@arpinum/messaging';
 import { Handler, Request } from 'express';
-import { SinonStub } from 'sinon';
 
 import { articleQueries } from '../../../domain';
-import {
-  createMessageBusStub,
-  createResponseStub,
-  examples
-} from '../../../test';
+import { examples, MessageBusStub, ResponseStub } from '../../../test';
 import { articlesGet } from './articlesGet';
 
 describe('Articles get', () => {
@@ -15,28 +10,35 @@ describe('Articles get', () => {
   let handler: Handler;
 
   beforeEach(() => {
-    queryBus = createMessageBusStub();
+    queryBus = new MessageBusStub();
     handler = articlesGet({ queryBus });
   });
 
-  it('should post a message to find and send articles', async () => {
+  it('should post a message to find articles', async () => {
     const request = createValidRequest();
-    const response = createResponseStub();
-    (queryBus.post as SinonStub)
-      .withArgs(articleQueries.findArticles())
-      .resolves([
+    const response = new ResponseStub();
+
+    await handler(request, response, null);
+
+    expect(queryBus.post).toHaveBeenCalledWith(articleQueries.findArticles());
+  });
+
+  it('should return found articles', async () => {
+    const request = createValidRequest();
+    const response = new ResponseStub();
+    (queryBus.post as jest.Mock).mockImplementation(() =>
+      Promise.resolve([
         {
           id: examples.uuid,
           title: 'Game review',
           text: 'Doom is a great game'
         }
-      ]);
+      ])
+    );
 
     await handler(request, response, null);
 
-    const sendStub = response.send as SinonStub;
-    expect(sendStub.called).toBeTruthy();
-    expect(sendStub.lastCall.args[0]).toEqual([
+    expect(response.send).toHaveBeenCalledWith([
       {
         id: examples.uuid,
         title: 'Game review',
