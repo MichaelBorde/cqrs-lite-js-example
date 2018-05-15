@@ -29,6 +29,7 @@
     "@types/jest": "22.2.3",
     "@types/knex": "0.14.14",
     "@types/node": "10.0.7",
+    "axios": "0.18.0",
     "jest": "22.4.3",
     "nodemon": "1.17.4",
     "npm-run-all": "4.1.3",
