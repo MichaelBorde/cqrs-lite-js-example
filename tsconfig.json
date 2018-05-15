@@ -21,6 +21,6 @@
     "**/*.spec.ts",
     "**/*.e2e.ts",
     "**/*.spec.js",
-    "**/tests/*.ts"
+    "**/test/*.ts"
   ]
 }
