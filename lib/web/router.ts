@@ -12,5 +12,6 @@ export function createRouter(dependencies: RouterDependencies): Router {
   const routing = PromiseRouter();
   routing.post('/articles', requestHandlers.articlesPost);
   routing.get('/articles', requestHandlers.articlesGet);
+  routing.get('/articles/:id', requestHandlers.articleGet);
   return routing;
 }

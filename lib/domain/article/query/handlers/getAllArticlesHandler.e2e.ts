@@ -1,14 +1,16 @@
 import { MessageHandler } from '@arpinum/messaging';
-import { examples, withTestDb } from '../../../../test';
-import { articleQueries } from './articleQueries';
-import { ArticleView, findArticlesHandler } from './findArticlesHandler';
 
-describe('Find articles handler', () => {
+import { examples, withTestDb } from '../../../../test';
+import { ArticleView } from '../articleViews';
+import { articleQueries } from './articleQueries';
+import { getAllArticlesHandler } from './getAllArticlesHandler';
+
+describe('Get all articles handler', () => {
   const context = withTestDb();
   let handler: MessageHandler<void, Promise<ArticleView[]>>;
 
   beforeEach(() => {
-    handler = findArticlesHandler({ dbClient: context.dbClient });
+    handler = getAllArticlesHandler({ dbClient: context.dbClient });
   });
 
   afterEach(async () => {
@@ -25,7 +27,7 @@ describe('Find articles handler', () => {
       { id: examples.uuid2, title: 'Game review', text: 'Doom is a great game' }
     ]);
 
-    const articles = await handler(articleQueries.findArticles());
+    const articles = await handler(articleQueries.getAllArticles());
 
     expect(articles).toEqual([
       {

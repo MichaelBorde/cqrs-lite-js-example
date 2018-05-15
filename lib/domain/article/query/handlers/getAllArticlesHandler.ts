@@ -2,28 +2,18 @@ import { MessageHandler } from '@arpinum/messaging';
 import * as Knex from 'knex';
 
 import { DbArticle } from '../../command';
+import { ArticleView, dbArticleToView } from '../articleViews';
 
 interface Dependencies {
   dbClient: Knex;
 }
 
-export interface ArticleView {
-  id: string;
-  title: string;
-  text: string;
-}
-
-export function findArticlesHandler(
+export function getAllArticlesHandler(
   dependencies: Dependencies
 ): MessageHandler<void, Promise<ArticleView[]>> {
   const { dbClient } = dependencies;
   return async () => {
     const dbArticles = (await dbClient.table('articles')) as DbArticle[];
-    return dbArticles.map(fromDbArticle);
+    return dbArticles.map(dbArticleToView);
   };
-}
-
-function fromDbArticle(dbArticle: DbArticle): ArticleView {
-  const { id, title, text } = dbArticle;
-  return { id, title, text };
 }

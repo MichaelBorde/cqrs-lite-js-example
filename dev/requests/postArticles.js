@@ -19,7 +19,7 @@ async function main() {
     {
       id: 'f92cfe89-486d-453d-8909-dd2f8b360784',
       title: 'Cool',
-      text: 'It\'s alive'
+      text: "It's alive"
     }
   ];
 

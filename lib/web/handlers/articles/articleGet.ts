@@ -7,12 +7,13 @@ interface Dependencies {
   queryBus: MessageBus;
 }
 
-export function articlesGet(dependencies: Dependencies): Handler {
+export function articleGet(dependencies: Dependencies): Handler {
   const { queryBus } = dependencies;
 
-  return (_: Request, response: Response) => {
+  return (request: Request, response: Response) => {
+    const { id } = request.params;
     return queryBus
-      .post(articleQueries.getAllArticles())
-      .then(articles => response.send(articles));
+      .post(articleQueries.getArticleById({ id }))
+      .then(article => response.send(article));
   };
 }
