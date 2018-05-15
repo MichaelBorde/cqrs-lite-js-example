@@ -1,20 +1,17 @@
 import { MessageHandler } from '@arpinum/messaging';
 
 import { examples } from '../../../../test';
+import { ArticleRepositoryMock } from '../../test';
 import { ArticleRepository } from '../articleRepository';
 import { articleCommands, ArticleCreation } from './articleCommands';
 import { createArticleHandler } from './createArticleHandler';
-
-const ArticleRepositoryStub = jest.fn<ArticleRepository>(() => ({
-  save: jest.fn().mockResolvedValue(undefined)
-}));
 
 describe('Create article hander', () => {
   let articleRepository: ArticleRepository;
   let handler: MessageHandler<ArticleCreation, void>;
 
   beforeEach(() => {
-    articleRepository = new ArticleRepositoryStub();
+    articleRepository = new ArticleRepositoryMock();
     handler = createArticleHandler({ articleRepository });
   });
 

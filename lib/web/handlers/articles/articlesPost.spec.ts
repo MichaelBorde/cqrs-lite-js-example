@@ -2,7 +2,7 @@ import { MessageBus } from '@arpinum/messaging';
 import { Handler, Request } from 'express';
 
 import { articleCommands } from '../../../domain';
-import { examples, MessageBusStub, ResponseStub } from '../../../test';
+import { examples, MessageBusMock, ResponseMock } from '../../../test';
 import { articlesPost } from './articlesPost';
 
 describe('Articles post', () => {
@@ -10,13 +10,13 @@ describe('Articles post', () => {
   let handler: Handler;
 
   beforeEach(() => {
-    commandBus = new MessageBusStub();
+    commandBus = new MessageBusMock();
     handler = articlesPost({ commandBus });
   });
 
   it('should parse body and post a create command', async () => {
     const request = createValidRequest();
-    const response = new ResponseStub();
+    const response = new ResponseMock();
 
     await handler(request, response, null);
 
@@ -30,7 +30,7 @@ describe('Articles post', () => {
 
   it('should end response', async () => {
     const request = createValidRequest();
-    const response = new ResponseStub();
+    const response = new ResponseMock();
 
     await handler(request, response, null);
 
@@ -39,7 +39,7 @@ describe('Articles post', () => {
 
   it('should send 400 if body is invalid', async () => {
     const request = { body: {} } as Request;
-    const response = new ResponseStub();
+    const response = new ResponseMock();
 
     await handler(request, response, null);
 
