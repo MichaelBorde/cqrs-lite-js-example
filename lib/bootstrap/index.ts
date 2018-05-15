@@ -6,20 +6,23 @@ import {
 import { createMessageBus, MessageBus } from '@arpinum/messaging';
 import * as Knex from 'knex';
 
-import { Configuration, loadConfiguration } from '../configuration';
+import { Configuration } from '../configuration';
 import { registerCommandHandlers } from './commandHandlers';
 import { registerQueryHandlers } from './queryHandlers';
 import { Repositories } from './repositories';
 
 export interface RuntimeDependencies {
-  configuration: Configuration;
   createLogger: (options: LoggerOptions) => Logger;
   commandBus: MessageBus;
   queryBus: MessageBus;
 }
 
-export function bootstrap(): RuntimeDependencies {
-  const configuration = loadConfiguration();
+interface Dependencies {
+  configuration: Configuration;
+}
+
+export function bootstrap(dependencies: Dependencies): RuntimeDependencies {
+  const { configuration } = dependencies;
   const createLogger = createCreateLogger();
   const commandBus = createCommandBus();
   const queryBus = createQueryBus();
@@ -29,7 +32,6 @@ export function bootstrap(): RuntimeDependencies {
   registerQueryHandlers({ queryBus, dbClient });
 
   return {
-    configuration,
     createLogger,
     queryBus,
     commandBus

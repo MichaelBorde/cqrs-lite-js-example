@@ -9,15 +9,22 @@ import { Configuration } from '../configuration';
 import { RequestHandlers } from './handlers';
 import { createRouter } from './router';
 
+interface Dependencies {
+  configuration: Configuration;
+}
+
 export class Server {
   private server: HttpServer;
-  private configuration: Configuration;
+  private readonly configuration: Configuration;
   private logger: Logger;
+
+  constructor(dependencies: Dependencies) {
+    this.configuration = dependencies.configuration;
+  }
 
   public start(): Promise<void> {
     const expressApp = express();
-    const dependencies = bootstrap();
-    this.configuration = dependencies.configuration;
+    const dependencies = bootstrap({ configuration: this.configuration });
     this.logger = dependencies.createLogger({ fileName: __filename });
 
     this.configureExpress(expressApp);
