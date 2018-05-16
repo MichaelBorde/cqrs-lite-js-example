@@ -37,4 +37,14 @@ describe('Get article by id handler', () => {
       text: 'Its name is Garfield'
     });
   });
+
+  it('should throw if any error happens', async () => {
+    const query = articleQueries.getArticleById({ id: 'wrong type' as any });
+
+    const handle = handler(query);
+
+    await expect(handle).rejects.toThrow(
+      `Cannot find article with id ${examples.uuid}`
+    );
+  });
 });

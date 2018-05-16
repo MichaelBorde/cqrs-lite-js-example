@@ -14,11 +14,15 @@ export function getArticleByIdHandler(
 ): MessageHandler<GetArticleByIdPayload, Promise<ArticleView>> {
   const { dbClient } = dependencies;
   return async message => {
-    const { id } = message.payload;
-    const dbArticle = (await dbClient
-      .table('articles')
-      .where({ id })
-      .first()) as DbArticle;
-    return dbArticleToView(dbArticle);
+    try {
+      const { id } = message.payload;
+      const dbArticle = (await dbClient
+        .table('articles')
+        .where({ id })
+        .first()) as DbArticle;
+      return dbArticleToView(dbArticle);
+    } catch (error) {
+      throw new Error(`Cannot find article with id ${message.payload.id}`);
+    }
   };
 }

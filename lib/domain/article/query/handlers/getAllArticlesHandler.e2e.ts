@@ -38,4 +38,8 @@ describe('Get all articles handler', () => {
       { id: examples.uuid2, title: 'Game review', text: 'Doom is a great game' }
     ]);
   });
+
+  it('should throw if any error happens', () => {
+    // i can't easily make implementation fails
+  });
 });

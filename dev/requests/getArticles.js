@@ -16,9 +16,8 @@ function get(url) {
     .catch(error => {
       if (error.response) {
         const { status, data } = error.response;
-        console.error(`${status}: ${data}`);
-      } else {
-        console.error(error.message);
+        throw new Error(`${status}: ${data}`);
       }
+      throw error;
     });
 }

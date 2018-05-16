@@ -12,9 +12,13 @@ export function createArticleHandler(
   dependencies: Dependencies
 ): MessageHandler<ArticleCreation, void> {
   const { articleRepository } = dependencies;
-  return (message: Message<ArticleCreation>) => {
-    const { id, title, text } = message.payload;
-    const article = new Article({ id, title, text });
-    return articleRepository.save(article);
+  return async (message: Message<ArticleCreation>) => {
+    try {
+      const { id, title, text } = message.payload;
+      const article = new Article({ id, title, text });
+      await articleRepository.save(article);
+    } catch (error) {
+      throw new Error('Cannot create article');
+    }
   };
 }

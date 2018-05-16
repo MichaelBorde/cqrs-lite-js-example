@@ -26,7 +26,7 @@ describe('Articles get', () => {
   it('should return found articles', async () => {
     const request = createValidRequest();
     const response = new ResponseMock();
-    (queryBus.post as jest.Mock).mockImplementation(() =>
+    queryBus.post = jest.fn().mockImplementation(() =>
       Promise.resolve([
         {
           id: examples.uuid,
@@ -45,6 +45,17 @@ describe('Articles get', () => {
         text: 'Doom is a great game'
       }
     ]);
+  });
+
+  it('should send 400 if query fails', async () => {
+    const request = createValidRequest();
+    const response = new ResponseMock();
+    queryBus.post = jest.fn().mockRejectedValue(new Error('Oupsie'));
+
+    await handler(request, response, null);
+
+    expect(response.status).toHaveBeenCalledWith(400);
+    expect(response.send).toHaveBeenCalledWith('Oupsie');
   });
 });
 

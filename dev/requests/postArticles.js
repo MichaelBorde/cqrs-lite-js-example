@@ -29,15 +29,14 @@ async function main() {
 }
 
 function post(url, data) {
-  axios
+  return axios
     .post(url, data)
     .then(response => response.data)
     .catch(error => {
       if (error.response) {
         const { status, data } = error.response;
-        console.error(`${status}: ${data}`);
-      } else {
-        console.error(error.message);
+        throw new Error(`${status}: ${data}`);
       }
+      throw error;
     });
 }

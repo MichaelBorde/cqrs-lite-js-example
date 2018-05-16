@@ -13,6 +13,7 @@ export function articlesGet(dependencies: Dependencies): Handler {
   return (_: Request, response: Response) => {
     return queryBus
       .post(articleQueries.getAllArticles())
-      .then(articles => response.send(articles));
+      .then(articles => response.send(articles))
+      .catch(error => response.status(400).send(error.message));
   };
 }

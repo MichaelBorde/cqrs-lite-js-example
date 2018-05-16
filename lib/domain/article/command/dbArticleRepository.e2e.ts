@@ -1,4 +1,4 @@
-import { examples, withTestDb } from '../../../test';
+import { examples, SilentLogger, withTestDb } from '../../../test';
 import { ArticleRepository } from './articleRepository';
 import { DbArticleRepository } from './dbArticleRepository';
 
@@ -7,7 +7,10 @@ describe('Db article repository', () => {
   let repository: ArticleRepository;
 
   beforeEach(() => {
-    repository = new DbArticleRepository({ dbClient: context.dbClient });
+    repository = new DbArticleRepository({
+      createLogger: () => new SilentLogger(),
+      dbClient: context.dbClient
+    });
   });
 
   afterEach(async () => {
@@ -30,6 +33,24 @@ describe('Db article repository', () => {
         title: 'I have a new cat',
         text: 'Its name is Garfield'
       });
+    });
+
+    it('should throw if id is already used', async () => {
+      await context.dbClient.table('articles').insert({
+        id: examples.uuid,
+        title: 'I have a new cat',
+        text: 'Its name is Garfield'
+      });
+
+      const save = repository.save({
+        id: examples.uuid,
+        title: 'Hey',
+        text: 'This is a great news'
+      });
+
+      await expect(save).rejects.toThrow(
+        `Article with id ${examples.uuid} cannot be saved`
+      );
     });
   });
 });

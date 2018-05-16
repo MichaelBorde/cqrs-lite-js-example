@@ -13,7 +13,11 @@ export function getAllArticlesHandler(
 ): MessageHandler<void, Promise<ArticleView[]>> {
   const { dbClient } = dependencies;
   return async () => {
-    const dbArticles = (await dbClient.table('articles')) as DbArticle[];
-    return dbArticles.map(dbArticleToView);
+    try {
+      const dbArticles = (await dbClient.table('articles')) as DbArticle[];
+      return dbArticles.map(dbArticleToView);
+    } catch (error) {
+      throw new Error('Cannot find articles');
+    }
   };
 }

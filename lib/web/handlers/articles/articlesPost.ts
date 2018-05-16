@@ -24,12 +24,13 @@ const validateBody = createValidator(bodySchema);
 export function articlesPost(dependencies: Dependencies): Handler {
   const { commandBus } = dependencies;
 
-  return (request: Request, response: Response) => {
+  return async (request: Request, response: Response) => {
     if (!validateBody(request.body)) {
       return response.status(400).send(validateBody.errors);
     }
     return commandBus
       .post(articleCommands.createArticle(request.body))
-      .then(() => response.end());
+      .then(() => response.end())
+      .catch(error => response.status(400).send(error.message));
   };
 }

@@ -27,7 +27,7 @@ export function bootstrap(dependencies: Dependencies): RuntimeDependencies {
   const commandBus = createCommandBus();
   const queryBus = createQueryBus();
   const dbClient = createDbClient();
-  const repositories = new Repositories({ dbClient });
+  const repositories = new Repositories({ createLogger, dbClient });
   registerCommandHandlers({ repositories, commandBus });
   registerQueryHandlers({ queryBus, dbClient });
 
