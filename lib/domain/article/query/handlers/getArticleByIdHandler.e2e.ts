@@ -39,12 +39,12 @@ describe('Get article by id handler', () => {
   });
 
   it('should throw if any error happens', async () => {
-    const query = articleQueries.getArticleById({ id: 'wrong type' as any });
+    const query = articleQueries.getArticleById({ id: 'wrong-type' as any });
 
     const handle = handler(query);
 
     await expect(handle).rejects.toThrow(
-      `Cannot find article with id ${examples.uuid}`
+      `Cannot find article with id wrong-type`
     );
   });
 });

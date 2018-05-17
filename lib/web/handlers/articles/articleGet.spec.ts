@@ -55,6 +55,16 @@ describe('Article get', () => {
     expect(response.status).toHaveBeenCalledWith(400);
     expect(response.send).toHaveBeenCalledWith('Oupsie');
   });
+
+  it('should send 404 if query returns nothing', async () => {
+    const request = createValidRequest();
+    const response = new ResponseMock();
+    queryBus.post = jest.fn().mockImplementation(() => Promise.resolve());
+
+    await handler(request, response, null);
+
+    expect(response.sendStatus).toHaveBeenCalledWith(404);
+  });
 });
 
 function createValidRequest() {

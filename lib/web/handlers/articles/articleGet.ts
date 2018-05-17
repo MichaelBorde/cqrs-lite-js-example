@@ -10,11 +10,19 @@ interface Dependencies {
 export function articleGet(dependencies: Dependencies): Handler {
   const { queryBus } = dependencies;
 
-  return (request: Request, response: Response) => {
-    const { id } = request.params;
-    return queryBus
-      .post(articleQueries.getArticleById({ id }))
-      .then(article => response.send(article))
-      .catch(error => response.status(400).send(error.message));
+  return async (request: Request, response: Response) => {
+    try {
+      const { id } = request.params;
+      const article = await queryBus.post(
+        articleQueries.getArticleById({ id })
+      );
+      if (article) {
+        response.send(article);
+      } else {
+        response.sendStatus(404);
+      }
+    } catch (error) {
+      response.status(400).send(error.message);
+    }
   };
 }

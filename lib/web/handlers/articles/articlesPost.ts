@@ -26,11 +26,14 @@ export function articlesPost(dependencies: Dependencies): Handler {
 
   return async (request: Request, response: Response) => {
     if (!validateBody(request.body)) {
-      return response.status(400).send(validateBody.errors);
+      response.status(400).send(validateBody.errors);
+      return;
     }
-    return commandBus
-      .post(articleCommands.createArticle(request.body))
-      .then(() => response.end())
-      .catch(error => response.status(400).send(error.message));
+    try {
+      await commandBus.post(articleCommands.createArticle(request.body));
+      response.end();
+    } catch (error) {
+      response.status(400).send(error.message);
+    }
   };
 }

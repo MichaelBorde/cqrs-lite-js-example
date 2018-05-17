@@ -7,6 +7,9 @@ export interface ArticleView {
 }
 
 export function dbArticleToView(dbArticle: DbArticle): ArticleView {
+  if (!dbArticle) {
+    return null;
+  }
   const { id, title, text } = dbArticle;
   return { id, title, text };
 }
