@@ -1,6 +1,6 @@
 'use strict';
 
-const axios = require('axios');
+const { post } = require('./common');
 
 main().catch(console.error);
 
@@ -26,17 +26,4 @@ async function main() {
   for (let article of articles) {
     await post('http://localhost:8080/articles', article);
   }
-}
-
-function post(url, data) {
-  return axios
-    .post(url, data)
-    .then(response => response.data)
-    .catch(error => {
-      if (error.response) {
-        const { status, data } = error.response;
-        throw new Error(`${status}: ${data}`);
-      }
-      throw error;
-    });
 }

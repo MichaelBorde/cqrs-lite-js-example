@@ -20,6 +20,19 @@ export class DbArticleRepository implements ArticleRepository {
     this.logger = createLogger({ fileName: __filename });
   }
 
+  public async getById(id: string): Promise<Article> {
+    try {
+      const dbArticle = (await this.dbClient
+        .table('articles')
+        .where({ id })
+        .first()) as DbArticle;
+      return fromDbArticle(dbArticle);
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error('Article cannot be get by id');
+    }
+  }
+
   public async save(article: Article): Promise<void> {
     try {
       const dbArticle = toDbArticle(article);
@@ -28,7 +41,22 @@ export class DbArticleRepository implements ArticleRepository {
       );
     } catch (error) {
       this.logger.error(error);
-      throw new Error(`Article with id ${article.id} cannot be saved`);
+      throw new Error('Article cannot be saved');
+    }
+  }
+
+  public async update(article: Article): Promise<void> {
+    try {
+      const dbArticle = toDbArticle(article);
+      await this.dbClient.transaction(trx =>
+        trx
+          .table('articles')
+          .update(dbArticle)
+          .where({ id: dbArticle.id })
+      );
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error('Article cannot be updated');
     }
   }
 }
@@ -39,4 +67,12 @@ function toDbArticle(article: Article): DbArticle {
     title: article.title,
     text: article.text
   };
+}
+
+function fromDbArticle(dbArticle: DbArticle): Article {
+  return new Article({
+    id: dbArticle.id,
+    title: dbArticle.title,
+    text: dbArticle.text
+  });
 }

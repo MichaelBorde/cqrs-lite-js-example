@@ -3,12 +3,12 @@ import { MessageHandler } from '@arpinum/messaging';
 import { examples } from '../../../../test';
 import { ArticleRepositoryMock } from '../../test';
 import { ArticleRepository } from '../articleRepository';
-import { articleCommands, ArticleCreation } from './articleCommands';
+import { articleCommands, CreateArticlePayload } from './articleCommands';
 import { createArticleHandler } from './createArticleHandler';
 
 describe('Create article hander', () => {
   let articleRepository: ArticleRepository;
-  let handler: MessageHandler<ArticleCreation, void>;
+  let handler: MessageHandler<CreateArticlePayload, void>;
 
   beforeEach(() => {
     articleRepository = new ArticleRepositoryMock();

@@ -13,5 +13,6 @@ export function createRouter(dependencies: RouterDependencies): Router {
   routing.post('/articles', requestHandlers.articlesPost);
   routing.get('/articles', requestHandlers.articlesGet);
   routing.get('/articles/:id', requestHandlers.articleGet);
+  routing.put('/articles/:id/title', requestHandlers.articleTitlePut);
   return routing;
 }

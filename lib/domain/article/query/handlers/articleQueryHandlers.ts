@@ -1,5 +1,5 @@
 import * as Knex from 'knex';
-import { articleQueries } from './articleQueries';
+import { articleQueries as queries } from './articleQueries';
 import { getAllArticlesHandler } from './getAllArticlesHandler';
 import { getArticleByIdHandler } from './getArticleByIdHandler';
 
@@ -10,10 +10,10 @@ interface Dependencies {
 export function articleQueryHandlers(dependencies: Dependencies) {
   const { dbClient } = dependencies;
   return {
-    [articleQueries.getArticleById.toString()]: getArticleByIdHandler({
+    [queries.getArticleById.toString()]: getArticleByIdHandler({
       dbClient
     }),
-    [articleQueries.getAllArticles.toString()]: getAllArticlesHandler({
+    [queries.getAllArticles.toString()]: getAllArticlesHandler({
       dbClient
     })
   };

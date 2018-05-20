@@ -1,5 +1,6 @@
 import { ArticleRepository } from '../articleRepository';
-import { articleCommands } from './articleCommands';
+import { articleCommands as commands } from './articleCommands';
+import { changeArticleTitleHandler } from './changeArticleTitleHandler';
 import { createArticleHandler } from './createArticleHandler';
 
 interface Dependencies {
@@ -9,7 +10,10 @@ interface Dependencies {
 export function articleCommandHandlers(dependencies: Dependencies) {
   const { articleRepository } = dependencies;
   return {
-    [articleCommands.createArticle.toString()]: createArticleHandler({
+    [commands.createArticle.toString()]: createArticleHandler({
+      articleRepository
+    }),
+    [commands.changeArticleTitle.toString()]: changeArticleTitleHandler({
       articleRepository
     })
   };

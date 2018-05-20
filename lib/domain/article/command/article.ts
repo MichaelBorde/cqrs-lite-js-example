@@ -1,7 +1,6 @@
 import { AggregateRoot } from '../../../ddd';
 
 export class Article extends AggregateRoot {
-  public id: string;
   public title: string;
   public text: string;
 
@@ -10,5 +9,9 @@ export class Article extends AggregateRoot {
     const { title, text } = rawArticle;
     this.title = title;
     this.text = text;
+  }
+
+  public changeTitle(newTitle: string) {
+    this.title = newTitle;
   }
 }

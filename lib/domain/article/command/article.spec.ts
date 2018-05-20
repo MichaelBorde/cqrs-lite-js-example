@@ -17,4 +17,18 @@ describe('Article', () => {
       });
     });
   });
+
+  describe('on changing title', () => {
+    it('should use the new title', () => {
+      const article = new Article({
+        id: examples.uuid,
+        title: 'I have a new cat',
+        text: 'Its name is Garfield'
+      });
+
+      article.changeTitle('Look at my new cat');
+
+      expect(article.title).toEqual('Look at my new cat');
+    });
+  });
 });
