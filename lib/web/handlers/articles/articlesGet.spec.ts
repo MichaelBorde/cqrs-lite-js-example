@@ -1,7 +1,8 @@
 import { MessageBus } from '@arpinum/messaging';
 import { Handler, Request } from 'express';
+import * as _ from 'lodash/fp';
 
-import { articleQueries } from '../../../domain';
+import { articleQueries as queries } from '../../../domain';
 import { examples, MessageBusMock, ResponseMock } from '../../../test';
 import { articlesGet } from './articlesGet';
 
@@ -14,27 +15,21 @@ describe('Articles get', () => {
     handler = articlesGet({ queryBus });
   });
 
-  it('should post a message to get all articles', async () => {
+  it('should post a query and send found articles', async () => {
     const request = createValidRequest();
     const response = new ResponseMock();
-
-    await handler(request, response, null);
-
-    expect(queryBus.post).toHaveBeenCalledWith(articleQueries.getAllArticles());
-  });
-
-  it('should return found articles', async () => {
-    const request = createValidRequest();
-    const response = new ResponseMock();
-    queryBus.post = jest.fn().mockImplementation(() =>
-      Promise.resolve([
-        {
-          id: examples.uuid,
-          title: 'Game review',
-          text: 'Doom is a great game'
-        }
-      ])
-    );
+    queryBus.post = jest.fn().mockImplementation(message => {
+      if (_.isEqual(message, queries.getAllArticles())) {
+        return Promise.resolve([
+          {
+            id: examples.uuid,
+            title: 'Game review',
+            text: 'Doom is a great game'
+          }
+        ]);
+      }
+      return Promise.resolve();
+    });
 
     await handler(request, response, null);
 

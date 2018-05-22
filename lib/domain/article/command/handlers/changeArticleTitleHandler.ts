@@ -1,7 +1,7 @@
 import { Message, MessageHandler } from '@arpinum/messaging';
 
 import { ArticleRepository } from '../articleRepository';
-import { CreateArticlePayload } from './articleCommands';
+import { ChangeArticleTitlePayload } from './articleCommands';
 
 interface Dependencies {
   articleRepository: ArticleRepository;
@@ -9,9 +9,9 @@ interface Dependencies {
 
 export function changeArticleTitleHandler(
   dependencies: Dependencies
-): MessageHandler<CreateArticlePayload, void> {
+): MessageHandler<ChangeArticleTitlePayload, void> {
   const { articleRepository } = dependencies;
-  return async (message: Message<CreateArticlePayload>) => {
+  return async (message: Message<ChangeArticleTitlePayload>) => {
     try {
       const { id, title } = message.payload;
       const article = await articleRepository.getById(id);

@@ -9,7 +9,6 @@ import { changeArticleTitleHandler } from './changeArticleTitleHandler';
 
 describe('Change article title hander', () => {
   let articleRepository: ArticleRepository;
-  // todo: maybe extract a type
   let handler: MessageHandler<ChangeArticleTitlePayload, void>;
 
   beforeEach(() => {
