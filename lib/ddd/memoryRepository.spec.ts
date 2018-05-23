@@ -34,8 +34,7 @@ describe('Memory repository', () => {
 
       await repository.save(person);
 
-      const roots = Array.from(repository.aggregateRoots.values());
-      expect(roots).toEqual([
+      expect(repository.values()).toEqual([
         new Person({ id: examples.uuid, firstName: 'John' })
       ]);
     });
@@ -56,8 +55,7 @@ describe('Memory repository', () => {
         new Person({ id: examples.uuid2, firstName: 'Billy 2.0' })
       );
 
-      const roots = Array.from(repository.aggregateRoots.values());
-      expect(roots).toEqual([
+      expect(repository.values()).toEqual([
         new Person({ id: examples.uuid, firstName: 'John' }),
         new Person({ id: examples.uuid2, firstName: 'Billy 2.0' })
       ]);
@@ -77,8 +75,7 @@ describe('Memory repository', () => {
 
       await repository.delete(examples.uuid2);
 
-      const roots = Array.from(repository.aggregateRoots.values());
-      expect(roots).toEqual([
+      expect(repository.values()).toEqual([
         new Person({ id: examples.uuid, firstName: 'John' })
       ]);
     });

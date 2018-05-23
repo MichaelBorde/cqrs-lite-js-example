@@ -1,17 +1,16 @@
 import { MessageHandler } from '@arpinum/messaging';
 
 import { examples } from '../../../../test';
-import { ArticleRepositoryMock } from '../../test';
-import { ArticleRepository } from '../articleRepository';
+import { MemoryArticleRepository } from '../../test';
 import { articleCommands, CreateArticlePayload } from './articleCommands';
 import { createArticleHandler } from './createArticleHandler';
 
 describe('Create article hander', () => {
-  let articleRepository: ArticleRepository;
+  let articleRepository: MemoryArticleRepository;
   let handler: MessageHandler<CreateArticlePayload, void>;
 
   beforeEach(() => {
-    articleRepository = new ArticleRepositoryMock();
+    articleRepository = new MemoryArticleRepository();
     handler = createArticleHandler({ articleRepository });
   });
 
@@ -24,11 +23,13 @@ describe('Create article hander', () => {
 
     await handler(command);
 
-    expect(articleRepository.save).toHaveBeenCalledWith({
-      id: examples.uuid,
-      title: 'I have a new cat',
-      text: 'Its name is Garfield'
-    });
+    expect(articleRepository.values()).toEqual([
+      {
+        id: examples.uuid,
+        title: 'I have a new cat',
+        text: 'Its name is Garfield'
+      }
+    ]);
   });
 
   it('should throw if any error happens', async () => {

@@ -23,4 +23,8 @@ export class MemoryRepository<T extends AggregateRoot>
     this.aggregateRoots.delete(id);
     return Promise.resolve();
   }
+
+  public values(): T[] {
+    return Array.from(this.aggregateRoots.values());
+  }
 }
