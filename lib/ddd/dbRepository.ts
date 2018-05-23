@@ -32,7 +32,7 @@ export abstract class DbRepository<T extends AggregateRoot>
       return this.fromDbObject(dbObject);
     } catch (error) {
       this.logger.error(error);
-      throw new Error('Aggregate root cannot be get by id');
+      throw new Error('Cannot get aggregate root by id');
     }
   }
 
@@ -44,7 +44,7 @@ export abstract class DbRepository<T extends AggregateRoot>
       );
     } catch (error) {
       this.logger.error(error);
-      throw new Error('Aggregate root cannot be saved');
+      throw new Error('Cannot save aggregate root');
     }
   }
 
@@ -59,7 +59,21 @@ export abstract class DbRepository<T extends AggregateRoot>
       );
     } catch (error) {
       this.logger.error(error);
-      throw new Error('Aggregate root cannot be updated');
+      throw new Error('Cannot upgrade aggregate root');
+    }
+  }
+
+  public async delete(id: string): Promise<void> {
+    try {
+      await this.dbClient.transaction(trx =>
+        trx
+          .table(this.table)
+          .delete()
+          .where({ id })
+      );
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error('Cannot delete aggregate root');
     }
   }
 

@@ -6,4 +6,6 @@ export interface Repository<T extends AggregateRoot> {
   save(t: T): Promise<void>;
 
   update(t: T): Promise<void>;
+
+  delete(id: string): Promise<void>;
 }

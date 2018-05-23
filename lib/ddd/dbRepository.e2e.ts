@@ -44,9 +44,7 @@ describe('Db repository', () => {
     it('should throw if any error happens in db', async () => {
       const getById = repository.getById(3 as any); // wrong type
 
-      await expect(getById).rejects.toThrow(
-        'Aggregate root cannot be get by id'
-      );
+      await expect(getById).rejects.toThrow('Cannot get aggregate root by id');
     });
   });
 
@@ -80,7 +78,7 @@ describe('Db repository', () => {
         })
       );
 
-      await expect(save).rejects.toThrow('Aggregate root cannot be saved');
+      await expect(save).rejects.toThrow('Cannot save aggregate root');
     });
   });
 
@@ -129,7 +127,37 @@ describe('Db repository', () => {
         })
       );
 
-      await expect(update).rejects.toThrow('Aggregate root cannot be updated');
+      await expect(update).rejects.toThrow('Cannot upgrade aggregate root');
+    });
+  });
+
+  describe('on delete', () => {
+    it('should delete corresponding aggregate root', async () => {
+      await context.dbClient.table('persons').insert([
+        {
+          id: examples.uuid,
+          first_name: 'Not me'
+        },
+        {
+          id: examples.uuid2,
+          first_name: 'Me'
+        }
+      ]);
+
+      await repository.delete(examples.uuid2);
+
+      const persons = await context.dbClient.table('persons');
+      expect(persons.length).toEqual(1);
+      expect(persons[0]).toEqual({
+        id: examples.uuid,
+        first_name: 'Not me'
+      });
+    });
+
+    it('should throw if any error happens in db', async () => {
+      const deletion = repository.delete(3 as any); // wrong type
+
+      await expect(deletion).rejects.toThrow('Cannot delete aggregate root');
     });
   });
 });
