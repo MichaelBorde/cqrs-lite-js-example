@@ -1,4 +1,8 @@
 import { examples } from '../test';
+import {
+  AlreadyExistingAggregateRootError,
+  MissingAggregateRootError
+} from './errors';
 import { MemoryRepository } from './memoryRepository';
 import { Person } from './test';
 
@@ -26,6 +30,12 @@ describe('Memory repository', () => {
         new Person({ id: examples.uuid2, firstName: 'Billy' })
       );
     });
+
+    it('should reject when root does not exist', async () => {
+      const getById = repository.getById(examples.uuid);
+
+      await expect(getById).rejects.toThrow(MissingAggregateRootError);
+    });
   });
 
   describe('on save', () => {
@@ -37,6 +47,18 @@ describe('Memory repository', () => {
       expect(repository.values()).toEqual([
         new Person({ id: examples.uuid, firstName: 'John' })
       ]);
+    });
+
+    it('should reject when root already exists', async () => {
+      repository.aggregateRoots.set(
+        examples.uuid,
+        new Person({ id: examples.uuid, firstName: 'John' })
+      );
+      const person = new Person({ id: examples.uuid, firstName: 'Billy' });
+
+      const save = repository.save(person);
+
+      await expect(save).rejects.toThrow(AlreadyExistingAggregateRootError);
     });
   });
 
@@ -60,6 +82,14 @@ describe('Memory repository', () => {
         new Person({ id: examples.uuid2, firstName: 'Billy 2.0' })
       ]);
     });
+
+    it('should reject when root does not exist', async () => {
+      const person = new Person({ id: examples.uuid, firstName: 'John' });
+
+      const update = repository.update(person);
+
+      await expect(update).rejects.toThrow(MissingAggregateRootError);
+    });
   });
 
   describe('on delete', () => {
@@ -78,6 +108,12 @@ describe('Memory repository', () => {
       expect(repository.values()).toEqual([
         new Person({ id: examples.uuid, firstName: 'John' })
       ]);
+    });
+
+    it('should reject when root does not exist', async () => {
+      const deletion = repository.delete(examples.uuid);
+
+      await expect(deletion).rejects.toThrow(MissingAggregateRootError);
     });
   });
 });

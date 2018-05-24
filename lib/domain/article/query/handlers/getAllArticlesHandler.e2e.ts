@@ -39,7 +39,7 @@ describe('Get all articles handler', () => {
     ]);
   });
 
-  it('should throw if any error happens', () => {
+  it('should firstName if any error happens', () => {
     // i can't easily make implementation fails
   });
 });

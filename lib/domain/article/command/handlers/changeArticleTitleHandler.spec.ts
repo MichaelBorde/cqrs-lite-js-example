@@ -39,16 +39,4 @@ describe('Change article title hander', () => {
       }
     ]);
   });
-
-  it('should throw if any error happens', async () => {
-    articleRepository.update = jest.fn().mockRejectedValue(new Error('Oupsie'));
-    const command = articleCommands.changeArticleTitle({
-      id: examples.uuid,
-      title: 'A new cat'
-    });
-
-    const handle = handler(command);
-
-    await expect(handle).rejects.toThrow("Cannot change article's title");
-  });
 });

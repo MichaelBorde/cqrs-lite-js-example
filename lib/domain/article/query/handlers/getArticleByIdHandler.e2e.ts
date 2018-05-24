@@ -38,7 +38,7 @@ describe('Get article by id handler', () => {
     });
   });
 
-  it('should throw if any error happens', async () => {
+  it('should reject if any error happens', async () => {
     const query = articleQueries.getArticleById({ id: 'wrong-type' as any });
 
     const handle = handler(query);

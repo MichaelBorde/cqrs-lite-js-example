@@ -12,13 +12,9 @@ export function changeArticleTitleHandler(
 ): MessageHandler<ChangeArticleTitlePayload, void> {
   const { articleRepository } = dependencies;
   return async (message: Message<ChangeArticleTitlePayload>) => {
-    try {
-      const { id, title } = message.payload;
-      const article = await articleRepository.getById(id);
-      article.changeTitle(title);
-      await articleRepository.update(article);
-    } catch (error) {
-      throw new Error("Cannot change article's title");
-    }
+    const { id, title } = message.payload;
+    const article = await articleRepository.getById(id);
+    article.changeTitle(title);
+    await articleRepository.update(article);
   };
 }

@@ -31,17 +31,4 @@ describe('Create article hander', () => {
       }
     ]);
   });
-
-  it('should throw if any error happens', async () => {
-    articleRepository.save = jest.fn().mockRejectedValue(new Error('Oupsie'));
-    const command = articleCommands.createArticle({
-      id: examples.uuid,
-      title: 'I have a new cat',
-      text: 'Its name is Garfield'
-    });
-
-    const handle = handler(command);
-
-    await expect(handle).rejects.toThrow('Cannot create article');
-  });
 });

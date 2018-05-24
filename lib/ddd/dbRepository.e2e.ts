@@ -1,4 +1,8 @@
 import { examples, SilentLogger, withTestDb } from '../test';
+import {
+  AlreadyExistingAggregateRootError,
+  MissingAggregateRootError
+} from './errors';
 import { DbPersonRepository, Person, PersonRepository } from './test';
 
 describe('Db repository', () => {
@@ -41,7 +45,13 @@ describe('Db repository', () => {
       });
     });
 
-    it('should throw if any error happens in db', async () => {
+    it('should reject when root does not exist', async () => {
+      const getById = repository.getById(examples.uuid);
+
+      await expect(getById).rejects.toThrow(MissingAggregateRootError);
+    });
+
+    it('should reject if any error happens in db', async () => {
       const getById = repository.getById(3 as any); // wrong type
 
       await expect(getById).rejects.toThrow('Cannot get aggregate root by id');
@@ -65,15 +75,22 @@ describe('Db repository', () => {
       });
     });
 
-    it('should throw if id is already used', async () => {
+    it('should reject when root already exists', async () => {
       await context.dbClient.table('persons').insert({
         id: examples.uuid,
         first_name: 'John'
       });
+      const person = new Person({ id: examples.uuid, firstName: 'Billy' });
 
+      const save = repository.save(person);
+
+      await expect(save).rejects.toThrow(AlreadyExistingAggregateRootError);
+    });
+
+    it('should reject if any error happens in db', async () => {
       const save = repository.save(
         new Person({
-          id: examples.uuid,
+          id: 3 as any, // wrong type
           firstName: 'John'
         })
       );
@@ -114,7 +131,15 @@ describe('Db repository', () => {
       });
     });
 
-    it('should throw if any error happens in db', async () => {
+    it('should reject when root does not exist', async () => {
+      const person = new Person({ id: examples.uuid, firstName: 'John' });
+
+      const update = repository.update(person);
+
+      await expect(update).rejects.toThrow(MissingAggregateRootError);
+    });
+
+    it('should reject if any error happens in db', async () => {
       await context.dbClient.table('persons').insert({
         id: examples.uuid,
         first_name: 'Old first name'
@@ -154,7 +179,13 @@ describe('Db repository', () => {
       });
     });
 
-    it('should throw if any error happens in db', async () => {
+    it('should reject when root does not exist', async () => {
+      const deletion = repository.delete(examples.uuid);
+
+      await expect(deletion).rejects.toThrow(MissingAggregateRootError);
+    });
+
+    it('should reject if any error happens in db', async () => {
       const deletion = repository.delete(3 as any); // wrong type
 
       await expect(deletion).rejects.toThrow('Cannot delete aggregate root');
