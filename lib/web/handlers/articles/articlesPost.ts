@@ -29,11 +29,7 @@ export function articlesPost(dependencies: Dependencies): Handler {
       response.status(400).send(validateBody.errors);
       return;
     }
-    try {
-      await commandBus.post(articleCommands.createArticle(request.body));
-      response.end();
-    } catch (error) {
-      response.status(400).send(error.message);
-    }
+    await commandBus.post(articleCommands.createArticle(request.body));
+    response.end();
   };
 }

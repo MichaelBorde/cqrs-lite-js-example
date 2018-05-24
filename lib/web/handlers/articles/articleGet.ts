@@ -27,18 +27,8 @@ export function articleGet(dependencies: Dependencies): Handler {
       response.status(400).send(validateParams.errors);
       return;
     }
-    try {
-      const payload = { id: request.params.id };
-      const article = await queryBus.post(
-        articleQueries.getArticleById(payload)
-      );
-      if (article) {
-        response.send(article);
-      } else {
-        response.sendStatus(404);
-      }
-    } catch (error) {
-      response.status(400).send(error.message);
-    }
+    const payload = { id: request.params.id };
+    const article = await queryBus.post(articleQueries.getArticleById(payload));
+    response.send(article);
   };
 }

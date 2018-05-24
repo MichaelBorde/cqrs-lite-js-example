@@ -11,11 +11,7 @@ export function articlesGet(dependencies: Dependencies): Handler {
   const { queryBus } = dependencies;
 
   return async (_: Request, response: Response) => {
-    try {
-      const articles = await queryBus.post(articleQueries.getAllArticles());
-      response.send(articles);
-    } catch (error) {
-      response.status(400).send(error.message);
-    }
+    const articles = await queryBus.post(articleQueries.getAllArticles());
+    response.send(articles);
   };
 }

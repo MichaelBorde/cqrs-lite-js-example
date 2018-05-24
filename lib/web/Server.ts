@@ -7,6 +7,7 @@ import * as morgan from 'morgan';
 import { bootstrap, RuntimeDependencies } from '../bootstrap';
 import { Configuration } from '../configuration';
 import { RequestHandlers } from './handlers';
+import { errorMiddleware } from './middlewares';
 import { createRouter } from './router';
 
 interface Dependencies {
@@ -25,22 +26,20 @@ export class Server {
   public start(): Promise<void> {
     const expressApp = express();
     const dependencies = bootstrap({ configuration: this.configuration });
-    this.logger = dependencies.createLogger({ fileName: __filename });
+    const { createLogger } = dependencies;
+    this.logger = createLogger({ fileName: __filename });
 
-    this.configureExpress(expressApp);
+    expressApp.set('trust proxy', true);
+    expressApp.use(express.json());
     this.configureHttpLogging(expressApp);
     this.configureRouter(expressApp, dependencies);
+    expressApp.use(errorMiddleware({ createLogger }));
 
     this.server = createServer(expressApp);
     return this.listen().then(() => {
       const root = `http://localhost:${this.configuration.port}`;
       this.logger.info('Server started on', root);
     });
-  }
-
-  private configureExpress(expressApp: Application) {
-    expressApp.set('trust proxy', true);
-    expressApp.use(express.json());
   }
 
   private configureHttpLogging(expressApp: Application) {

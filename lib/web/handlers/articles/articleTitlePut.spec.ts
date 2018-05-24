@@ -59,17 +59,6 @@ describe('Article title put', () => {
     const errors = (response.send as jest.Mock).mock.calls[0][0];
     expect(errors.length).toBeGreaterThan(0);
   });
-
-  it('should send 400 if command fails', async () => {
-    const request = createValidRequest();
-    const response = new ResponseMock();
-    commandBus.post = jest.fn().mockRejectedValue(new Error('Oupsie'));
-
-    await handler(request, response, null);
-
-    expect(response.status).toHaveBeenCalledWith(400);
-    expect(response.send).toHaveBeenCalledWith('Oupsie');
-  });
 });
 
 function createValidRequest() {

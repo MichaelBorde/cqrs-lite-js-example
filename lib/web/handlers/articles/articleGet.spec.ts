@@ -49,27 +49,6 @@ describe('Article get', () => {
     const errors = (response.send as jest.Mock).mock.calls[0][0];
     expect(errors.length).toBeGreaterThan(0);
   });
-
-  it('should send 400 if query fails', async () => {
-    const request = createValidRequest();
-    const response = new ResponseMock();
-    queryBus.post = jest.fn().mockRejectedValue(new Error('Oupsie'));
-
-    await handler(request, response, null);
-
-    expect(response.status).toHaveBeenCalledWith(400);
-    expect(response.send).toHaveBeenCalledWith('Oupsie');
-  });
-
-  it('should send 404 if query returns nothing', async () => {
-    const request = createValidRequest();
-    const response = new ResponseMock();
-    queryBus.post = jest.fn().mockImplementation(() => Promise.resolve());
-
-    await handler(request, response, null);
-
-    expect(response.sendStatus).toHaveBeenCalledWith(404);
-  });
 });
 
 function createValidRequest() {

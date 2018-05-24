@@ -41,17 +41,6 @@ describe('Articles get', () => {
       }
     ]);
   });
-
-  it('should send 400 if query fails', async () => {
-    const request = createValidRequest();
-    const response = new ResponseMock();
-    queryBus.post = jest.fn().mockRejectedValue(new Error('Oupsie'));
-
-    await handler(request, response, null);
-
-    expect(response.status).toHaveBeenCalledWith(400);
-    expect(response.send).toHaveBeenCalledWith('Oupsie');
-  });
 });
 
 function createValidRequest() {

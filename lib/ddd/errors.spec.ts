@@ -4,7 +4,7 @@ import {
   MissingAggregateRootError
 } from './errors';
 
-describe('Missing aggregate root error', () => {
+describe('MissingAggregateRootError', () => {
   it('could be created', () => {
     const error = new MissingAggregateRootError(examples.uuid);
 
@@ -15,7 +15,7 @@ describe('Missing aggregate root error', () => {
   });
 });
 
-describe('Already existing aggregate root error', () => {
+describe('AlreadyExistingAggregateRootError', () => {
   it('could be created', () => {
     const error = new AlreadyExistingAggregateRootError(examples.uuid);
 

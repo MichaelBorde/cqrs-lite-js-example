@@ -41,12 +41,8 @@ export function articleTitlePut(dependencies: Dependencies): Handler {
       response.status(400).send(validateBody.errors);
       return;
     }
-    try {
-      const payload = { id: request.params.id, title: request.body.title };
-      await commandBus.post(articleCommands.changeArticleTitle(payload));
-      response.end();
-    } catch (error) {
-      response.status(400).send(error.message);
-    }
+    const payload = { id: request.params.id, title: request.body.title };
+    await commandBus.post(articleCommands.changeArticleTitle(payload));
+    response.end();
   };
 }
