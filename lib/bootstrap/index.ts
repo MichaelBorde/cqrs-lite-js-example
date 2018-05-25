@@ -29,7 +29,7 @@ export function bootstrap(dependencies: Dependencies): RuntimeDependencies {
   const dbClient = createDbClient();
   const repositories = new Repositories({ createLogger, dbClient });
   registerCommandHandlers({ repositories, commandBus });
-  registerQueryHandlers({ queryBus, dbClient });
+  registerQueryHandlers({ createLogger, queryBus, dbClient });
 
   return {
     createLogger,

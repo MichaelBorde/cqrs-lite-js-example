@@ -1,6 +1,6 @@
 import { MessageHandler } from '@arpinum/messaging';
 
-import { examples, withTestDb } from '../../../../test';
+import { examples, SilentLogger, withTestDb } from '../../../../test';
 import { ArticleView } from '../articleViews';
 import { articleQueries } from './articleQueries';
 import { getAllArticlesHandler } from './getAllArticlesHandler';
@@ -10,7 +10,10 @@ describe('Get all articles handler', () => {
   let handler: MessageHandler<void, Promise<ArticleView[]>>;
 
   beforeEach(() => {
-    handler = getAllArticlesHandler({ dbClient: context.dbClient });
+    handler = getAllArticlesHandler({
+      createLogger: () => new SilentLogger(),
+      dbClient: context.dbClient
+    });
   });
 
   afterEach(async () => {

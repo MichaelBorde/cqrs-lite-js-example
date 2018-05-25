@@ -1,18 +1,24 @@
-import { ErrorRequestHandler, Request } from 'express';
+import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 
-import { MissingAggregateRootError } from '../../ddd';
+import {
+  MissingAggregateRootError,
+  QuieriedObjectNotFoundError
+} from '../../ddd';
 import { examples, ResponseMock, SilentLogger } from '../../test';
 import { errorMiddleware } from './errorMiddleware';
 
 describe('Error middleware', () => {
   let middleware: ErrorRequestHandler;
-  const request = {} as Request;
-  const response = new ResponseMock();
-  const next = () => {
-    return;
-  };
+  let request: Request;
+  let response: Response;
+  let next: NextFunction;
 
   beforeEach(() => {
+    request = {} as Request;
+    response = new ResponseMock();
+    next = () => {
+      return;
+    };
     middleware = errorMiddleware({ createLogger: () => new SilentLogger() });
   });
 
@@ -27,6 +33,15 @@ describe('Error middleware', () => {
 
   it('should send 404 for MissingAggregateRootError', () => {
     const error = new MissingAggregateRootError(examples.uuid);
+
+    middleware(error, request, response, next);
+
+    expect(response.status).toHaveBeenCalledWith(404);
+    expect(response.send).toHaveBeenCalledWith({ error });
+  });
+
+  it('should send 404 for QuieriedObjectNotFoundError', () => {
+    const error = new QuieriedObjectNotFoundError({ id: examples.uuid });
 
     middleware(error, request, response, next);
 

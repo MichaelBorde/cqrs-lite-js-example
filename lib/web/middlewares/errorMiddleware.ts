@@ -1,7 +1,10 @@
 import { Logger, LoggerOptions } from '@arpinum/log';
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 
-import { MissingAggregateRootError } from '../../ddd';
+import {
+  MissingAggregateRootError,
+  QuieriedObjectNotFoundError
+} from '../../ddd';
 
 interface Dependencies {
   createLogger: (options: LoggerOptions) => Logger;
@@ -16,7 +19,10 @@ export function errorMiddleware(
     response.status(code()).send({ error });
 
     function code() {
-      if (error instanceof MissingAggregateRootError) {
+      if (
+        error instanceof MissingAggregateRootError ||
+        error instanceof QuieriedObjectNotFoundError
+      ) {
         return 404;
       }
       return 400;

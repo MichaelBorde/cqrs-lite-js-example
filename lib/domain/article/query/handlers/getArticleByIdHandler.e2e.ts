@@ -1,6 +1,7 @@
 import { MessageHandler } from '@arpinum/messaging';
 
-import { examples, withTestDb } from '../../../../test';
+import { QuieriedObjectNotFoundError } from '../../../../ddd';
+import { examples, SilentLogger, withTestDb } from '../../../../test';
 import { ArticleView } from '../articleViews';
 import { articleQueries, GetArticleByIdPayload } from './articleQueries';
 import { getArticleByIdHandler } from './getArticleByIdHandler';
@@ -10,7 +11,10 @@ describe('Get article by id handler', () => {
   let handler: MessageHandler<GetArticleByIdPayload, Promise<ArticleView>>;
 
   beforeEach(() => {
-    handler = getArticleByIdHandler({ dbClient: context.dbClient });
+    handler = getArticleByIdHandler({
+      createLogger: () => new SilentLogger(),
+      dbClient: context.dbClient
+    });
   });
 
   afterEach(async () => {
@@ -36,6 +40,14 @@ describe('Get article by id handler', () => {
       title: 'I have a new cat',
       text: 'Its name is Garfield'
     });
+  });
+
+  it('should reject if article cannot be found', async () => {
+    const query = articleQueries.getArticleById({ id: examples.uuid });
+
+    const handle = handler(query);
+
+    await expect(handle).rejects.toThrow(QuieriedObjectNotFoundError);
   });
 
   it('should reject if any error happens', async () => {
