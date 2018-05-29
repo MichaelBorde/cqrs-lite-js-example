@@ -3,6 +3,7 @@ import { Handler, Request } from 'express';
 
 import { articleCommands } from '../../../domain';
 import { examples, MessageBusMock, ResponseMock } from '../../../test';
+import { ValidationError } from '../../validation';
 import { articleTitlePut } from './articleTitlePut';
 
 describe('Article title put', () => {
@@ -36,28 +37,22 @@ describe('Article title put', () => {
     expect(response.end).toHaveBeenCalled();
   });
 
-  it('should send 400 if params are invalid', async () => {
+  it('should throw if params are invalid', async () => {
     const request = { ...createValidRequest(), params: {} } as Request;
     const response = new ResponseMock();
 
-    await handler(request, response, null);
+    const handle = handler(request, response, null);
 
-    expect(response.status).toHaveBeenCalledWith(400);
-    expect(response.send).toHaveBeenCalled();
-    const errors = (response.send as jest.Mock).mock.calls[0][0];
-    expect(errors.length).toBeGreaterThan(0);
+    await expect(handle).rejects.toThrow(ValidationError);
   });
 
-  it('should send 400 if body is invalid', async () => {
+  it('should throw if body is invalid', async () => {
     const request = { ...createValidRequest(), body: {} } as Request;
     const response = new ResponseMock();
 
-    await handler(request, response, null);
+    const handle = handler(request, response, null);
 
-    expect(response.status).toHaveBeenCalledWith(400);
-    expect(response.send).toHaveBeenCalled();
-    const errors = (response.send as jest.Mock).mock.calls[0][0];
-    expect(errors.length).toBeGreaterThan(0);
+    await expect(handle).rejects.toThrow(ValidationError);
   });
 });
 

@@ -2,7 +2,7 @@ import { MessageBus } from '@arpinum/messaging';
 import { Handler, Request, Response } from 'express';
 
 import { articleCommands } from '../../../domain';
-import { createValidator } from '../../validator';
+import { createValidation } from '../../validation';
 
 interface Dependencies {
   commandBus: MessageBus;
@@ -19,16 +19,13 @@ const bodySchema = {
   additionalProperties: false
 };
 
-const validateBody = createValidator(bodySchema);
+const validateBody = createValidation(bodySchema);
 
 export function articlesPost(dependencies: Dependencies): Handler {
   const { commandBus } = dependencies;
 
   return async (request: Request, response: Response) => {
-    if (!validateBody(request.body)) {
-      response.status(400).send(validateBody.errors);
-      return;
-    }
+    validateBody(request.body);
     await commandBus.post(articleCommands.createArticle(request.body));
     response.end();
   };

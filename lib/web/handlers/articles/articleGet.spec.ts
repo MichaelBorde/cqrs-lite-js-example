@@ -4,6 +4,7 @@ import * as _ from 'lodash/fp';
 
 import { articleQueries as queries } from '../../../domain';
 import { examples, MessageBusMock, ResponseMock } from '../../../test';
+import { ValidationError } from '../../validation';
 import { articleGet } from './articleGet';
 
 describe('Article get', () => {
@@ -38,16 +39,13 @@ describe('Article get', () => {
     });
   });
 
-  it('should send 400 if params are invalid', async () => {
+  it('should throw if params are invalid', async () => {
     const request = { ...createValidRequest(), params: {} } as Request;
     const response = new ResponseMock();
 
-    await handler(request, response, null);
+    const handle = handler(request, response, null);
 
-    expect(response.status).toHaveBeenCalledWith(400);
-    expect(response.send).toHaveBeenCalled();
-    const errors = (response.send as jest.Mock).mock.calls[0][0];
-    expect(errors.length).toBeGreaterThan(0);
+    await expect(handle).rejects.toThrow(ValidationError);
   });
 });
 

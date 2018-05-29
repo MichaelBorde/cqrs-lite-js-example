@@ -2,7 +2,7 @@ import { MessageBus } from '@arpinum/messaging';
 import { Handler, Request, Response } from 'express';
 
 import { articleCommands } from '../../../domain';
-import { createValidator } from '../../validator';
+import { createValidation } from '../../validation';
 
 interface Dependencies {
   commandBus: MessageBus;
@@ -26,21 +26,15 @@ const bodySchema = {
   additionalProperties: false
 };
 
-const validateParams = createValidator(paramsSchema);
-const validateBody = createValidator(bodySchema);
+const validateParams = createValidation(paramsSchema);
+const validateBody = createValidation(bodySchema);
 
 export function articleTitlePut(dependencies: Dependencies): Handler {
   const { commandBus } = dependencies;
 
   return async (request: Request, response: Response) => {
-    if (!validateParams(request.params)) {
-      response.status(400).send(validateParams.errors);
-      return;
-    }
-    if (!validateBody(request.body)) {
-      response.status(400).send(validateBody.errors);
-      return;
-    }
+    validateParams(request.params);
+    validateBody(request.body);
     const payload = { id: request.params.id, title: request.body.title };
     await commandBus.post(articleCommands.changeArticleTitle(payload));
     response.end();

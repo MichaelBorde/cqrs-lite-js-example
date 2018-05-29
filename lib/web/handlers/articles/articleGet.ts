@@ -2,7 +2,7 @@ import { MessageBus } from '@arpinum/messaging';
 import { Handler, Request, Response } from 'express';
 
 import { articleQueries } from '../../../domain';
-import { createValidator } from '../../validator';
+import { createValidation } from '../../validation';
 
 interface Dependencies {
   queryBus: MessageBus;
@@ -17,16 +17,13 @@ const paramsSchema = {
   additionalProperties: false
 };
 
-const validateParams = createValidator(paramsSchema);
+const validateParams = createValidation(paramsSchema);
 
 export function articleGet(dependencies: Dependencies): Handler {
   const { queryBus } = dependencies;
 
   return async (request: Request, response: Response) => {
-    if (!validateParams(request.params)) {
-      response.status(400).send(validateParams.errors);
-      return;
-    }
+    validateParams(request.params);
     const payload = { id: request.params.id };
     const article = await queryBus.post(articleQueries.getArticleById(payload));
     response.send(article);
