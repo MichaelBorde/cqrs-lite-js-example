@@ -5,6 +5,6 @@ export interface GetArticleByIdPayload {
 }
 
 export const articleQueries = {
-  getAllArticles: messageCreator<void>('FIND_ARTICLES'),
+  getAllArticles: messageCreator('FIND_ARTICLES'),
   getArticleById: messageCreator<GetArticleByIdPayload>('GET_ARTICLE_BY_ID')
 };

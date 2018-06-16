@@ -15,31 +15,26 @@ interface Dependencies {
 }
 
 export class Server {
-  private server: HttpServer;
+  private readonly server: HttpServer;
   private readonly configuration: Configuration;
-  private logger: Logger;
+  private readonly logger: Logger;
 
   constructor(dependencies: Dependencies) {
     this.configuration = dependencies.configuration;
+    const runtime = bootstrap({ configuration: this.configuration });
+    this.logger = runtime.createLogger({ fileName: __filename });
+    const expressApp = this.createExpressApp(runtime);
+    this.server = createServer(expressApp);
   }
 
-  public start(): Promise<void> {
+  private createExpressApp(runtime: RuntimeDependencies) {
     const expressApp = express();
-    const dependencies = bootstrap({ configuration: this.configuration });
-    const { createLogger } = dependencies;
-    this.logger = createLogger({ fileName: __filename });
-
     expressApp.set('trust proxy', true);
     expressApp.use(express.json());
     this.configureHttpLogging(expressApp);
-    this.configureRouter(expressApp, dependencies);
-    expressApp.use(errorMiddleware({ createLogger }));
-
-    this.server = createServer(expressApp);
-    return this.listen().then(() => {
-      const root = `http://localhost:${this.configuration.port}`;
-      this.logger.info('Server started on', root);
-    });
+    this.configureRouter(expressApp, runtime);
+    expressApp.use(errorMiddleware({ createLogger: runtime.createLogger }));
+    return expressApp;
   }
 
   private configureHttpLogging(expressApp: Application) {
@@ -59,6 +54,13 @@ export class Server {
     });
     const router = createRouter({ requestHandlers });
     expressApp.use(router);
+  }
+
+  public start(): Promise<void> {
+    return this.listen().then(() => {
+      const root = `http://localhost:${this.configuration.port}`;
+      this.logger.info('Server started on', root);
+    });
   }
 
   private listen() {

@@ -16,7 +16,7 @@ export function createValidation(schema: any) {
   const validator = new Ajv({ allErrors: true }).compile(schema);
   return (object: any) => {
     if (!validator(object)) {
-      throw new ValidationError(validator.errors);
+      throw new ValidationError(validator.errors || []);
     }
   };
 }

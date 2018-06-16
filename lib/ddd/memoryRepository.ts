@@ -13,7 +13,7 @@ export class MemoryRepository<T extends AggregateRoot>
     if (!this.aggregateRoots.has(id)) {
       return Promise.reject(new MissingAggregateRootError(id));
     }
-    return Promise.resolve(this.aggregateRoots.get(id));
+    return Promise.resolve(this.aggregateRoots.get(id) as T);
   }
 
   public async save(aggregateRoot: T): Promise<void> {
