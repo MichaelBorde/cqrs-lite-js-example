@@ -12,7 +12,7 @@ export function articlesGet(dependencies: Dependencies): Handler {
 
   return async (_: Request, response: Response) => {
     const articles = await queryBus.post(
-      articleQueries.getAllArticles(undefined)
+      articleQueries.getAllArticles()
     );
     response.send(articles);
   };

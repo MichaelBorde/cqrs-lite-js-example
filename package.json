@@ -46,7 +46,7 @@
   "dependencies": {
     "@arpinum/config": "2.0.0",
     "@arpinum/log": "4.1.1",
-    "@arpinum/messaging": "4.0.0-0",
+    "@arpinum/messaging": "4.0.0-1",
     "@types/express": "4.16.0",
     "@types/express-promise-router": "2.0.0",
     "@types/morgan": "1.7.35",
