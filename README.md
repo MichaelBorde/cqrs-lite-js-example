@@ -1,4 +1,4 @@
-# cqrs-lite-js-example
+# cqrs-lite-js-example [![Build Status](https://travis-ci.org/MichaelBorde/cqrs-lite-js-example.svg?branch=master)](https://travis-ci.org/MichaelBorde/cqrs-lite-js-example)
 
 CQRS-lite blog api example
 
