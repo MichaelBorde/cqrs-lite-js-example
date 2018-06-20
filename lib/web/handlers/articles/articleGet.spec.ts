@@ -30,7 +30,7 @@ describe('Article get', () => {
       return Promise.resolve();
     });
 
-    await handler(request, response, null);
+    await handler(request, response, () => undefined);
 
     expect(response.send).toHaveBeenCalledWith({
       id: examples.uuid,
@@ -43,7 +43,7 @@ describe('Article get', () => {
     const request = { ...createValidRequest(), params: {} } as Request;
     const response = new ResponseMock();
 
-    const handle = handler(request, response, null);
+    const handle = handler(request, response, () => undefined);
 
     await expect(handle).rejects.toThrow(ValidationError);
   });

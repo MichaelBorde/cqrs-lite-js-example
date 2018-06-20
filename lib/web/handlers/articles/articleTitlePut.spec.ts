@@ -19,7 +19,7 @@ describe('Article title put', () => {
     const request = createValidRequest();
     const response = new ResponseMock();
 
-    await handler(request, response, null);
+    await handler(request, response, () => undefined);
 
     const expectedMessage = articleCommands.changeArticleTitle({
       id: examples.uuid,
@@ -32,7 +32,7 @@ describe('Article title put', () => {
     const request = createValidRequest();
     const response = new ResponseMock();
 
-    await handler(request, response, null);
+    await handler(request, response, () => undefined);
 
     expect(response.end).toHaveBeenCalled();
   });
@@ -41,7 +41,7 @@ describe('Article title put', () => {
     const request = { ...createValidRequest(), params: {} } as Request;
     const response = new ResponseMock();
 
-    const handle = handler(request, response, null);
+    const handle = handler(request, response, () => undefined);
 
     await expect(handle).rejects.toThrow(ValidationError);
   });
@@ -50,7 +50,7 @@ describe('Article title put', () => {
     const request = { ...createValidRequest(), body: {} } as Request;
     const response = new ResponseMock();
 
-    const handle = handler(request, response, null);
+    const handle = handler(request, response, () => undefined);
 
     await expect(handle).rejects.toThrow(ValidationError);
   });

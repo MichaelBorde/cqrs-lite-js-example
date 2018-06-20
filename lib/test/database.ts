@@ -7,10 +7,7 @@ export interface DbTestContext {
 }
 
 export function withTestDb() {
-  const context: DbTestContext = { dbClient: null };
-  beforeAll(() => {
-    context.dbClient = createDbClient();
-  });
+  const context: DbTestContext = { dbClient: createDbClient() };
   afterAll(() =>
     new Promise(r => {
       if (context.dbClient) {
