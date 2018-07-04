@@ -1,11 +1,11 @@
 import { MessageBus } from '@arpinum/messaging';
 
-import { Logger, LoggerOptions } from '@arpinum/log';
+import { CreateLogger } from '@arpinum/log';
 import * as Knex from 'knex';
 import { articleQueryHandlers } from '../domain';
 
 interface Dependencies {
-  createLogger: (options: LoggerOptions) => Logger;
+  createLogger: CreateLogger;
   dbClient: Knex;
   queryBus: MessageBus;
 }

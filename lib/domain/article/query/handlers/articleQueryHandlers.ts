@@ -1,4 +1,4 @@
-import { Logger, LoggerOptions } from '@arpinum/log';
+import { CreateLogger } from '@arpinum/log';
 import * as Knex from 'knex';
 
 import { articleQueries as queries } from './articleQueries';
@@ -6,7 +6,7 @@ import { getAllArticlesHandler } from './getAllArticlesHandler';
 import { getArticleByIdHandler } from './getArticleByIdHandler';
 
 interface Dependencies {
-  createLogger: (options: LoggerOptions) => Logger;
+  createLogger: CreateLogger;
   dbClient: Knex;
 }
 

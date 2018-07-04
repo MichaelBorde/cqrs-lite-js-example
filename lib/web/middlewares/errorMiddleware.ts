@@ -1,4 +1,4 @@
-import { Logger, LoggerOptions } from '@arpinum/log';
+import { CreateLogger } from '@arpinum/log';
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 
 import {
@@ -7,7 +7,7 @@ import {
 } from '../../ddd';
 
 interface Dependencies {
-  createLogger: (options: LoggerOptions) => Logger;
+  createLogger: CreateLogger;
 }
 
 export function errorMiddleware(

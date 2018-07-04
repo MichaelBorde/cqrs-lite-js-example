@@ -1,6 +1,7 @@
 import {
+  CreateLogger,
   createLogger as rawCreateLogger,
-  Logger,
+  LevelName,
   LoggerOptions
 } from '@arpinum/log';
 import { createMessageBus, MessageBus } from '@arpinum/messaging';
@@ -12,7 +13,7 @@ import { registerQueryHandlers } from './queryHandlers';
 import { Repositories } from './repositories';
 
 export interface RuntimeDependencies {
-  createLogger: (options: LoggerOptions) => Logger;
+  createLogger: CreateLogger;
   commandBus: MessageBus;
   queryBus: MessageBus;
 }
@@ -38,7 +39,7 @@ export function bootstrap(dependencies: Dependencies): RuntimeDependencies {
   };
 
   function createCreateLogger() {
-    return (options: LoggerOptions) =>
+    return (options: LoggerOptions = {}) =>
       rawCreateLogger(
         Object.assign({ logLevel: configuration.logLevel }, options)
       );
@@ -46,7 +47,7 @@ export function bootstrap(dependencies: Dependencies): RuntimeDependencies {
 
   function createCommandBus(): MessageBus {
     const commandBusLogger = createLogger({
-      level: configuration.logLevel,
+      level: configuration.logLevel as LevelName,
       category: 'CommandBus'
     });
     return createMessageBus({
@@ -58,7 +59,7 @@ export function bootstrap(dependencies: Dependencies): RuntimeDependencies {
 
   function createQueryBus(): MessageBus {
     const queryBusLogger = createLogger({
-      level: configuration.logLevel,
+      level: configuration.logLevel as LevelName,
       category: 'QueryBus'
     });
     return createMessageBus({
