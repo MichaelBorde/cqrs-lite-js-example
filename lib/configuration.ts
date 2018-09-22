@@ -1,8 +1,9 @@
 import { loadConfiguration as load } from '@arpinum/config';
+import { LevelName } from '@arpinum/log';
 
 export interface Configuration {
   httpLogEnabled: boolean;
-  logLevel: string;
+  logLevel: LevelName;
   port: number;
   database: {
     url: string;
